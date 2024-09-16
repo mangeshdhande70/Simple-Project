@@ -1,0 +1,7 @@
+
+postgresql://test-db_owner:4KVmLqIax2uf@ep-hidden-river-a5jotvpn.us-east-2.aws.neon.tech/test-db?sslmode=require
+
+DATASOURCE_URL=jdbc:postgresql://ep-hidden-river-a5jotvpn.us-east-2.aws.neon.tech/test-db
+DATASOURCE_USERNAME=test-db_owner
+DATASOURCE_PASSWORD=4KVmLqIax2uf
+ALLOWED_ORIGINS=http://localhost:3000

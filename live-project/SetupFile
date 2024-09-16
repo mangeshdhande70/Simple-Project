@@ -1,0 +1,5 @@
+LINUX OR MACOS
+export DATASOURCE_URL="jdbc:postgresql://localhost:5432/test-db"
+export DATASOURCE_USERNAME="postgres"
+export DATASOURCE_PASSWORD="Mangesh$#1998"
+export ALLOWED_ORIGINS="http://localhost:3000"
