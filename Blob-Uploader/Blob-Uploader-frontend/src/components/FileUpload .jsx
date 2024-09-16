@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { useNavigate } from 'react-router-dom';
 
+const BASE_URL = import.meta.env.VITE_BASE_API_URL;
+const BUCKET_NAME = import.meta.env.VITE_SUPABASE_BUCKET;
+const FOLDER_NAME = import.meta.env.VITE_SUPABASE_FOLDER;
+const SUPABASE_ENDPOINT = import.meta.env.VITE_SUPABASE_ENDPOINT
+const SECRET_KEY = import.meta.env.VITE_SUPABASE_SECRET_KEY
+const ACCESS_ID= import.meta.env.VITE_SUPABASE_ACCESS_ID
+const BLOB_URL= import.meta.env.VITE_SUPBASE_BLOB_URL
+
+
+
 const client = new S3Client({
     forcePathStyle: true,
     region: 'ap-south-1',
-    endpoint: 'https://dyoubvrmtbkozfsqcryx.supabase.co/storage/v1/s3',
+    endpoint: `${SUPABASE_ENDPOINT}`,
     credentials: {
-        accessKeyId: '2108d2009d6a5b8ed8190ebd4345d12a',
-        secretAccessKey: 'af66835ade464134fbfad3d8f5eec50c83b747b616726c6d55057aa6ab1aaca6',
+        accessKeyId: `${ACCESS_ID}`,
+        secretAccessKey: `${SECRET_KEY}`,
     },
 });
 
@@ -27,10 +37,16 @@ const FileUpload = () => {
             };
             reader.readAsDataURL(file);
 
+          // console.log("BUCKET_NAME ",BUCKET_NAME);
+          // console.log("FOLDER_NAME ",FOLDER_NAME);
+          // console.log("BASE_URL {}",BASE_URL);
+          // console.log("Env {}",import.meta.env);
+
+
             // Upload to Supabase
             const params = {
-                Bucket: 'ekaiwaa',
-                Key: `avatars/${file.name}`,
+                Bucket: `${BUCKET_NAME}`,
+                Key: `${FOLDER_NAME}/${file.name}`,
                 Body: file,
                 ContentType: file.type,
             };
@@ -39,7 +55,7 @@ const FileUpload = () => {
                 const command = new PutObjectCommand(params);
                 await client.send(command);
                 console.log('File uploaded successfully');
-                const url = `https://dyoubvrmtbkozfsqcryx.supabase.co/storage/v1/object/public/ekaiwaa/avatars/${file.name}`;
+                const url = `${BLOB_URL}/${BUCKET_NAME}/${FOLDER_NAME}/${file.name}`;
                 setfileUrl(url);
                 setfileName(file.name);
                 console.log(url);
@@ -53,15 +69,16 @@ const FileUpload = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (file) {
-          console.log("fileUrl",fileUrl);
-          console.log("filename",fileName);
-
+          // console.log("fileUrl",fileUrl);
+          // console.log("filename",fileName);
+          // console.log("BASE_URL {}",BASE_URL);
+          // console.log("Env {}",import.meta.env);
           const payload = {
             fileName: fileName,  // The name of the file
             fileUrl: fileUrl  // The URL associated with the file
           };
           try {
-            const response = await fetch('http://localhost:9090/blob/post', {
+            const response = await fetch(`${BASE_URL}/post`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -84,7 +101,7 @@ const FileUpload = () => {
 
       const handleGetBlob = async () => {
         try {
-            const response = await fetch('http://localhost:9090/blob/getAllBlob'); // Adjust URL if necessary
+            const response = await fetch(`${BASE_URL}/getAllBlob`); // Adjust URL if necessary
             const result = await response.json();
             console.log("result : ",result)
             // Navigate to the /data route and pass data via state
@@ -120,7 +137,7 @@ const FileUpload = () => {
           </form>
 
           <button
-                onClick={handleGetBlob} // Changed from form to button
+                onClick={handleGetBlob} 
                 className="bg-blue-500 text-white px-4 py-2 mt-3 rounded hover:bg-blue-700"
             >
                 Get Blob
